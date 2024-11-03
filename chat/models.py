@@ -1,7 +1,6 @@
 from django.db import models
-
+from django.utils.text import slugify
 from core.user.models import CoreUser
-from django.db.models import Q
 
 # Create your models here.
 
@@ -24,6 +23,11 @@ class Room(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.name)
+        super().save()
+
 
 class ChatMessage(models.Model):
     room = models.ForeignKey(Room, related_name="messages", on_delete=models.CASCADE)
@@ -44,9 +48,9 @@ class ChatMessage(models.Model):
         return None
 
     @staticmethod
-    def all_msg_read(room_id, user):
+    def all_msg_read(room_id, username):
         all_msg = ChatMessage.objects.filter(room_id=room_id, read=False).exclude(
-            user__username=user)
+            user__username=username)
         for msg in all_msg:
             msg.read = True
             msg.save()

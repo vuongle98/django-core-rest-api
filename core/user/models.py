@@ -10,6 +10,17 @@ class CoreUser(AbstractUser):
     def __str__(self):
         return self.username or self.email
 
+class UserSettings(models.Model):
+    dark_mode = models.BooleanField(default=False)
+    user = models.OneToOneField(CoreUser, on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "Settings of " + self.user.username
+
+
 class Profile(models.Model):
     user = models.OneToOneField(CoreUser, on_delete=models.CASCADE)
     bio = models.TextField(null=True, blank=True)

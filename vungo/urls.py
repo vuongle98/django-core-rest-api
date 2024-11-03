@@ -1,5 +1,5 @@
 """
-URL configuration for storex project.
+URL configuration for vungo project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
@@ -16,22 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-from rest_framework import permissions
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
-schema_view = get_schema_view(
-   openapi.Info(
-      title="StoreX API",
-      default_version='v1',
-      description="API for storex",
-   ),
-   public=True,
-   permission_classes=([permissions.AllowAny,]),
-)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('core/', include("core.urls"), name='core'),
+    path('api/', include('api.urls'), name='api'),
     path('chat/', include('chat.urls'), name='chat'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    # Schema
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+
+    # Swagger UI
+    path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+
+    # Redoc UI
+    path('swagger/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]

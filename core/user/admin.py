@@ -18,6 +18,10 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'bio', 'avatar']
     list_filter = ['user']
 
+@admin.register(UserSettings)
+class UserSettingsAdmin(admin.ModelAdmin):
+    pass
+
 
 @admin.register(UserActivityLog)
 class UserAccessLogAdmin(admin.ModelAdmin):

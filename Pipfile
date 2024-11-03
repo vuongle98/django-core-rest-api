@@ -7,11 +7,11 @@ name = "pypi"
 django = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
-drf-yasg = "*"
 setuptools = "*"
 channels = "*"
 daphne = "*"
 pillow = "*"
+drf-spectacular = "*"
 
 [dev-packages]
 
