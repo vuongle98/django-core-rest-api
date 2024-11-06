@@ -48,11 +48,11 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return data
 
 class CustomTokenRefreshSerializer(TokenRefreshSerializer):
-    refreshToken = serializers.CharField(required=True, write_only=True)
+    refresh_token = serializers.CharField(required=True, write_only=True)
     refresh = serializers.CharField(required=False, write_only=True)
 
     def validate(self, attrs):
-        refresh_token = attrs.pop('refreshToken', None)
+        refresh_token = attrs.pop('refresh_token', None)
 
         if not refresh_token:
             raise serializers.ValidationError({'refreshToken': 'This field is required.'})
@@ -83,11 +83,11 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
         return data
 
 class CustomTokenBlacklistSerializer(TokenBlacklistSerializer):
-    refreshToken = serializers.CharField(required=True, write_only=True)
+    refresh_token = serializers.CharField(required=False, write_only=True)
     refresh = serializers.CharField(required=False, write_only=True)
 
     def validate(self, attrs):
-        refresh_token = attrs.pop('refreshToken', None)
+        refresh_token = attrs.pop('refresh_token', None)
         if not refresh_token:
             raise serializers.ValidationError({'refreshToken': 'This field is required.'})
 

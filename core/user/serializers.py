@@ -1,18 +1,40 @@
 from django.contrib.auth.models import Permission, Group
 
-from core.user.models import UserActivityLog, CoreUser, Profile
+from core.user.models import UserActivityLog, CoreUser, Profile, UserSettings
 from rest_framework import serializers
 
-class UserSerializer(serializers.ModelSerializer):
+class CoreUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CoreUser
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_active', 'date_joined']
+        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name', 'is_active', 'date_joined']
+        read_only_fields = ['id', 'is_active', 'date_joined']  # 'id', 'is_active', and 'date_joined' are read-only
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = CoreUser(**validated_data)  # Create a User instance without saving
+        user.set_password(validated_data['password'])  # Hash the password
+        user.save()  # Now save the User instance
+        return user
+
+class CoreUserEmbeddedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CoreUser
+        fields = ['id', 'username', 'email', 'first_name', 'last_name']
         read_only_fields = ['id', 'is_active', 'date_joined']  # 'id', 'is_active', and 'date_joined' are read-only
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    user = CoreUserEmbeddedSerializer(read_only=True)
+
     class Meta:
         model = Profile
-        fields = '__all__'
+        fields = ['id', 'user', 'bio', 'avatar', 'address', 'date_of_birth', 'phone_number', 'is_verified', 'is_online']
+
+class UserSettingsSerializer(serializers.ModelSerializer):
+    user = CoreUserEmbeddedSerializer(read_only=True)
+
+    class Meta:
+        model = UserSettings
+        fields = ['id', 'dark_mode', 'user']
 
 # Serializer for updating user info
 class UpdateUserSerializer(serializers.ModelSerializer):

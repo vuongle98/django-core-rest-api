@@ -12,6 +12,7 @@ channels = "*"
 daphne = "*"
 pillow = "*"
 drf-spectacular = "*"
+djangorestframework-camel-case = "*"
 
 [dev-packages]
 

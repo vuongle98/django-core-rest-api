@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.timezone import now
 
 
@@ -10,9 +12,18 @@ class CoreUser(AbstractUser):
     def __str__(self):
         return self.username or self.email
 
+@receiver(post_save, sender=CoreUser)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+        UserSettings.objects.create(user=instance)
+    else:
+        instance.profile.save()
+
 class UserSettings(models.Model):
     dark_mode = models.BooleanField(default=False)
     user = models.OneToOneField(CoreUser, on_delete=models.CASCADE)
+    remember_login = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
