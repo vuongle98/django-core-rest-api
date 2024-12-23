@@ -42,15 +42,17 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         model = CoreUser
         fields = ['username', 'email', 'first_name', 'last_name']
 
-class GroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Group
-        fields = ['id', 'name', 'permissions']
-
 class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission
         fields = ['id', 'name', 'codename']
+
+class GroupSerializer(serializers.ModelSerializer):
+    permissions = PermissionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Group
+        fields = ['id', 'name', 'permissions']
 
 class UserActivityLogSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
