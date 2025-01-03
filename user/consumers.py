@@ -3,11 +3,12 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from django.contrib.auth.models import AnonymousUser
 
-from user.constants import MessageType
+from common.constants import MessageType
 from user.models import Profile
-from utils.consumer_response import ConsumerResponse
+from common.consumer_response import ConsumerResponse
 
 ONLINE_USERS_GROUP = 'online_users'
+
 
 class OnlineStatusConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -34,12 +35,13 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
         match msg_type:
             case MessageType.CHECK_STATUS.value:
                 is_online = await self.check_user_online(user)
-                await self.send(text_data=json.dumps(ConsumerResponse(data = {'is_online': is_online, 'type': msg_type})))
+                await self.send(text_data=json.dumps(ConsumerResponse(data={'is_online': is_online, 'type': msg_type})))
             case MessageType.UPDATE_ONLINE_STATUS.value:
                 await self.update_user_activity(user)
-                await self.send(text_data=json.dumps(ConsumerResponse(data= {'is_online': True, 'type': msg_type})))
+                await self.send(text_data=json.dumps(ConsumerResponse(data={'is_online': True, 'type': msg_type})))
             case _:
-                await self.send(text_data=json.dumps(ConsumerResponse(status= 'error', message= 'invalid message type', data = {'type': MessageType.ERROR.value})))
+                await self.send(text_data=json.dumps(ConsumerResponse(status='error', message='invalid message type',
+                                                                      data={'type': MessageType.ERROR.value})))
 
     @sync_to_async
     def update_user_activity(self, user):

@@ -20,10 +20,10 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('notification/', include('notification.urls')),
-    path('auth/', include('auth.urls'), name="auth"),
-    path('user/', include('user.urls'), name='users'),
-    path('menu-item/', include('menu.urls'), name='menu'),
+    path('core/notification/', include('notification.urls')),
+    path('core/auth/', include('auth.urls'), name="auth"),
+    path('core/user/', include('user.urls'), name='users'),
+    path('core/menu-item/', include('menu.urls'), name='menu'),
     path('api/', include('api.urls'), name='api'),
     path('chat/', include('chat.urls'), name='chat'),
 
