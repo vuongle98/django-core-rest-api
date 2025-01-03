@@ -45,11 +45,10 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',  # For JWT
     'drf_spectacular',
     'channels',
-    'core',
-    'core.user',
-    'core.auth',
-    'core.notification',
-    'core.menu',
+    'user',
+    'auth',
+    'notification',
+    'menu',
     'api',
     'chat'
 ]
@@ -63,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'djangorestframework_camel_case.middleware.CamelCaseMiddleWare',
+    # 'user.middleware.UpdateLastActivityMiddleware'
 ]
 
 ROOT_URLCONF = 'vungo.urls'
@@ -145,7 +145,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'core_user.CoreUser'
+AUTH_USER_MODEL = 'user.CoreUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
@@ -194,6 +194,6 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': 'your-secret-key-here',  # Make sure to secure this in production
+    'SIGNING_KEY': SECRET_KEY,  # Make sure to secure this in production
     'AUTH_HEADER_TYPES': ('Bearer',),
 }

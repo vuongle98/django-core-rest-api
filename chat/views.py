@@ -7,7 +7,7 @@ from rest_framework import generics, status
 
 from chat.models import Room
 from chat.serializers import RoomSerializer, ChatMessageSerializer
-from core.user.models import CoreUser
+from user.models import CoreUser
 
 
 # Create your views here.

@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.user.models import CoreUser
+from user.models import CoreUser
 
 
 class Category(models.Model):

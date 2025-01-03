@@ -13,11 +13,12 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 
-from core import routing as core_routing
+from auth.middlewares import JWTAuthMiddleware
+from . import routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vungo.settings')
 
 application = ProtocolTypeRouter({
     'http': get_asgi_application(),
-    'websocket': AuthMiddlewareStack(URLRouter(core_routing.websocket_urlpatterns))
+    'websocket': JWTAuthMiddleware(URLRouter(routing.websocket_urlpatterns))
 })

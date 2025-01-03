@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Room, ChatMessage
-from core.user.models import CoreUser
+from user.models import CoreUser
 
 class RoomSerializer(serializers.ModelSerializer):
     participants = serializers.SlugRelatedField(

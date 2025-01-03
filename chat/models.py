@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
-from core.user.models import CoreUser
+from user.models import CoreUser
 
 # Create your models here.
 

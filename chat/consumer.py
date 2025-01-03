@@ -2,13 +2,12 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-import uuid
 from datetime import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
 
 from chat.models import Room, ChatMessage
-from core.user.models import CoreUser
+from user.models import CoreUser
 
 MESSAGE_MAX_LENGTH = 100
 
