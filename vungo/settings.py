@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'auth',
     'notification',
     'menu',
-    'api',
     'chat'
 ]
 

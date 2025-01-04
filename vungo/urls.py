@@ -24,7 +24,6 @@ urlpatterns = [
     path('core/auth/', include('auth.urls'), name="auth"),
     path('core/user/', include('user.urls'), name='users'),
     path('core/menu-item/', include('menu.urls'), name='menu'),
-    path('api/', include('api.urls'), name='api'),
     path('chat/', include('chat.urls'), name='chat'),
 
     # Schema
