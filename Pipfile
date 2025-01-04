@@ -13,6 +13,8 @@ daphne = "*"
 pillow = "*"
 drf-spectacular = "*"
 djangorestframework-camel-case = "*"
+django-redis = "*"
+pymemcache = "*"
 
 [dev-packages]
 

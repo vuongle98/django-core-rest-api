@@ -1,8 +1,9 @@
-from django.contrib.auth.models import Permission
-from rest_framework import views, status
+from django.contrib.auth.models import Permission, User
+from rest_framework import views, status, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from common.mixins import DynamicCacheMixin
 from menu.models import MenuItem
 from menu.serializers import MenuItemSerializer
 from user.models import Profile, UserSettings
@@ -11,35 +12,52 @@ from user.serializers import UserProfileSerializer, UserSettingsSerializer
 
 
 # Create your views here.
-class UserProfileView(views.APIView):
+class UserProfileView(DynamicCacheMixin, views.APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
+
+        cached_response = self.check_cache(request, *args, **kwargs)
+        if cached_response:
+            return cached_response
+
         try:
             user = request.user
             profile = Profile.objects.get(user__id=user.id)
 
-            return Response(UserProfileSerializer(profile).data)
+            response = Response(UserProfileSerializer(profile).data)
+            self.set_cache(request, response, *args, **kwargs)
+            return response
         except Profile.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-class UserSettingsView(views.APIView):
+class UserSettingsView(DynamicCacheMixin, views.APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
+        cached_response = self.check_cache(request, *args, **kwargs)
+        if cached_response:
+            return cached_response
+
         try:
             user = request.user
             settings = UserSettings.objects.get(user__id=user.id)
 
-            return Response(UserSettingsSerializer(settings).data)
+            response = Response(UserSettingsSerializer(settings).data)
+            self.set_cache(request, response, *args, **kwargs)
+            return response
         except Profile.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-class MenuItemView(views.APIView):
+class MenuItemView(DynamicCacheMixin, views.APIView):
     permission_classes = [IsAuthenticated]
     pagination_class = MenuPagination
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
+        cached_response = self.check_cache(request, *args, **kwargs)
+        if cached_response:
+            return cached_response
+
         user = request.user
 
         perms = user.user_permissions.all() | Permission.objects.filter(group__user=user)
@@ -53,7 +71,10 @@ class MenuItemView(views.APIView):
         # paginated_menu_items = paginator.paginate_queryset(menu_hierarchy, request)
         # serializer = MenuItemSerializer(paginated_menu_items, many=True)
 
-        return Response(MenuItemSerializer(menu_items, many=True).data)
+        response = Response(MenuItemSerializer(menu_items, many=True).data)
+
+        self.set_cache(request, response, *args, **kwargs)
+        return response
 
     def build_menu_hierarchy(self, menus):
         # Recursively build the menu structure, assuming parent-child relationships

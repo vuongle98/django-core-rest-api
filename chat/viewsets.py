@@ -3,9 +3,10 @@ from rest_framework.permissions import IsAuthenticated
 
 from chat.models import Room
 from chat.serializers import RoomSerializer
+from common.mixins import DynamicCacheMixin
 
 
-class RoomViewSet(viewsets.ModelViewSet):
+class RoomViewSet(DynamicCacheMixin, viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
     permission_classes = [IsAuthenticated]

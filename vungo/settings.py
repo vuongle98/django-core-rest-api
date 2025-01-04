@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -147,6 +147,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user.CoreUser'
 
+# REST API configuration
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
@@ -179,6 +180,7 @@ REST_FRAMEWORK = {
     },
 }
 
+# Swagger configuration
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Vungo',
     'DESCRIPTION': 'Vungo',
@@ -186,8 +188,8 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,  # Exclude the raw schema in the Swagger UI
 }
 
+# JWT configuration
 from datetime import timedelta
-#
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
@@ -196,4 +198,36 @@ SIMPLE_JWT = {
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,  # Make sure to secure this in production
     'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+# Caching configurations
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://192.168.1.30:6379',  # Redis configuration
+    },
+    'memcached': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': '127.0.0.1:11211',  # Memcached configuration
+    }
+}
+
+CACHE_BACKEND = 'redis'  # Can be 'redis', 'memcached'
+# Define the default cache timeout and timeout for authenticated users
+CACHE_TIMEOUT_DEFAULT = 60
+CACHE_TIMEOUT_AUTHENTICATED = 300
+
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'root': {
+        'level': 'INFO',
+        'handlers': ['console'],
+    }
 }
