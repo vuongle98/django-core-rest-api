@@ -54,7 +54,7 @@
         };
 
         const roomName = "{{ room_name }}";
-        const ws_url = `ws://${window.location.host}/ws/chat/${roomName}/`;
+        const ws_url = `ws://${window.location.host}/ws/chat/${roomName}/?token=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2NTgwODkyLCJpYXQiOjE3MzU5NzYwOTIsImp0aSI6IjExMjYxNWE1ZGZjYzRkNWM5MzVjMmNjMTBjYzgzMDcwIiwidXNlcl9pZCI6MX0.48W0stuPI-vcDdMy60b0gAsQmB-w7-qNEzKe-Lv7fYE`;
         const chatSocket = new WebSocket(ws_url);
 
         // Assume user data is passed from Django's template context
