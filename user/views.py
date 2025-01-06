@@ -1,4 +1,5 @@
 from django.contrib.auth.models import Permission, User
+from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from rest_framework import views, status, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -14,6 +15,7 @@ from user.serializers import UserProfileSerializer, UserSettingsSerializer
 # Create your views here.
 class UserProfileView(DynamicCacheMixin, views.APIView):
     permission_classes = (IsAuthenticated,)
+    authentication_classes = (OAuth2Authentication,)
 
     def get(self, request, *args, **kwargs):
 

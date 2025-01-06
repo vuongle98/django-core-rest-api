@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'oauth2_provider',
     'rest_framework',
-    'rest_framework_simplejwt.token_blacklist',  # For JWT
+    # 'rest_framework_simplejwt.token_blacklist',  # For JWT
     'drf_spectacular',
     'channels',
     'user',
@@ -61,7 +62,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'djangorestframework_camel_case.middleware.CamelCaseMiddleWare',
-    'user.middleware.UpdateLastActivityMiddleware'
+    'user.middleware.UpdateLastActivityMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware'
 ]
 
 ROOT_URLCONF = 'vungo.urls'
@@ -158,8 +160,9 @@ REST_FRAMEWORK = {
         'djangorestframework_camel_case.parser.CamelCaseJSONParser',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication'
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.UserRateThrottle',
@@ -229,4 +232,74 @@ LOGGING = {
         'level': 'INFO',
         'handlers': ['console'],
     }
+}
+
+# OAUTH Configuration
+PRIVATE_KEY_PATH = """
+-----BEGIN PRIVATE KEY-----
+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
+XwgHVOmNhxJ9iHnxFcZFR4vwEB6Cjqw=
+-----END PRIVATE KEY-----
+"""
+
+OAUTH2_PROVIDER = {
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
+    'ROTATE_REFRESH_TOKENS': True,
+    'OIDC_ENABLED': True,
+    'OIDC_RSA_PRIVATE_KEY': PRIVATE_KEY_PATH,
+    "SCOPES": {
+        "openid": "OpenID Connect scope",
+        # ... any other scopes that you use
+    },
+    'JWT_ALLOW': True
 }
