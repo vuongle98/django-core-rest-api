@@ -11,11 +11,11 @@ channels = "*"
 daphne = "*"
 pillow = "*"
 drf-spectacular = "*"
-djangorestframework-camel-case = "*"
 django-redis = "*"
 pymemcache = "*"
 django-oauth-toolkit = "*"
 djangorestframework-simplejwt = "*"
+djangorestframework-camel-case = "*"
 
 [dev-packages]
 
