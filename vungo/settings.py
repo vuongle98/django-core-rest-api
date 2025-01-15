@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'auth',
     'notification',
     'menu',
-    'chat'
+    'chat',
+    'common',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -158,9 +159,13 @@ AUTH_USER_MODEL = 'user.CoreUser'
 # REST API configuration
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
+        'common.custom_response.CustomCamelCaseResponse',
         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
         'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
+        # 'common.custom_response.CustomResponse',
+
     ),
+    'EXCEPTION_HANDLER': 'common.handlers.custom_exception_handler',
     'DEFAULT_PARSER_CLASSES': (
         'djangorestframework_camel_case.parser.CamelCaseFormParser',
         'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
@@ -182,7 +187,7 @@ REST_FRAMEWORK = {
         'user': '10000/day',
     },
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'common.custom_pagination.CustomPagination',
     'PAGE_SIZE': 10,
     'JSON_UNDERSCOREIZE': {
         'no_underscore_before_number': True,
@@ -216,7 +221,7 @@ SIMPLE_JWT = {
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://192.168.1.30:6379',  # Redis configuration
+        'LOCATION': 'redis://192.168.1.17:6379',  # Redis configuration
     },
     'memcached': {
         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
